@@ -41,7 +41,7 @@ function chart(m,small=false) {
  }
  if(!small){
   for(let i=0;i<4;i++){const v=ylo+(yhi-ylo)*i/3,y=Y(v);content+=`<line class="chart-grid" x1="${pad.l}" y1="${y}" x2="${w-pad.r}" y2="${y}"/><text x="${pad.l-10}" y="${y+4}" text-anchor="end">${fmt(v)}</text>`;}
-  const positions=points.length===1?[points[0]]:points.length<=4?points:[points[0],points[Math.floor((points.length-1)/2)],points.at(-1)];
+  const positions=points.length===1?[points[0]]:w<450?[points[0],points.at(-1)]:points.length<=4?points:[points[0],points[Math.floor((points.length-1)/2)],points.at(-1)];
   for(const o of positions)content+=`<text x="${X(o.iso)}" y="${h-13}" text-anchor="${points.length===1?'middle':o===points[0]?'start':o===points.at(-1)?'end':'middle'}">${shortDate(o.date)}</text>`;
  }
  for(const seg of chunks)if(seg.length>1)content+=`<path d="${seg.map((o,i)=>(i?'L':'M')+X(o.iso).toFixed(2)+' '+Y(o.value).toFixed(2)).join(' ')}" fill="none" stroke="${color.line}" stroke-width="${small?1.7:2.2}" stroke-linejoin="round"/>`;
