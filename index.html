@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta name="robots" content="noindex,nofollow,noarchive">
+ <meta name="referrer" content="no-referrer">
+ <meta name="color-scheme" content="light">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+ <title>myhealth — личная история анализов</title>
+ <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+ <link rel="stylesheet" href="./app.css">
+</head>
+<body>
+ <a class="skip-link" href="#main">К показателям</a>
+ <section id="lock-screen" class="lock-screen" aria-labelledby="lock-title">
+  <div class="lock-top"><span class="brand"><span class="brand-mark" aria-hidden="true">✳</span> myhealth</span><span class="eyebrow">ЛИЧНЫЙ АРХИВ</span></div>
+  <main class="lock-main">
+   <div class="lock-intro"><p class="eyebrow">ДАННЫЕ, КОТОРЫЕ ПРИНАДЛЕЖАТ ВАМ</p><h1 id="lock-title">Ваша история.<br><em>Только для вас.</em></h1><p>Все анализы в одном месте.<br>Понятная динамика, точные значения.</p><div class="lock-ornament" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></div>
+   <form id="unlock-form" class="unlock-form">
+    <span class="form-icon" aria-hidden="true">⌑</span><h2>Открыть мои анализы</h2><p>Введите пароль от вашего архива.</p>
+    <label for="password">Пароль</label><div class="password-wrap"><input id="password" type="password" autocomplete="current-password" required autofocus><button id="show-password" type="button" aria-label="Показать пароль">Показать</button></div>
+    <p id="login-error" class="error" role="alert"></p><button id="unlock-button" class="button unlock-button" type="submit">Открыть архив</button>
+    <p class="security-note">Данные зашифрованы. Пароль используется только в вашем браузере и никуда не отправляется.</p>
+   </form>
+  </main><footer class="lock-footer"><span>myhealth / личная история анализов</span><span>Пространство для ясности.</span></footer>
+ </section>
+ <div id="workspace" class="workspace" hidden>
+  <aside class="sidebar" id="sidebar">
+   <a class="brand" href="#" id="home-link"><span class="brand-mark" aria-hidden="true">✳</span> myhealth</a>
+   <div class="notebook-label"><span class="book-icon" aria-hidden="true">▤</span><div>Личный архив<small id="archive-years"></small></div></div>
+   <nav id="navigation" aria-label="Разделы анализов"></nav>
+   <div class="sidebar-bottom"><button class="text-button" id="source-button">Скачать исходный файл</button><button class="text-button" id="logout-button">Закрыть архив <span aria-hidden="true">⌑</span></button><p>Данные открыты только<br>в этой вкладке.</p></div>
+  </aside>
+  <div class="work-content">
+   <header class="topbar"><button id="menu-button" class="icon-button" aria-label="Открыть разделы" aria-expanded="false">☰</button><div class="breadcrumb">Личный архив <span>/</span> <strong id="breadcrumb-current">Обзор</strong></div><span class="topbar-lock">⌑ <span>Зашифрованный архив</span></span></header>
+   <main id="main" tabindex="-1">
+    <section class="page-intro"><div><p class="eyebrow" id="page-eyebrow">ЛИЧНАЯ ИСТОРИЯ ЗДОРОВЬЯ</p><h1 id="page-title">Мои анализы <em>в динамике.</em></h1><p class="intro-copy" id="intro-copy">Отдельные цифры складываются в историю.</p></div><div class="last-update"><span class="tiny-label">ПОСЛЕДНИЙ АНАЛИЗ</span><strong id="last-date"></strong><span id="last-source">Все результаты сохранены</span></div></section>
+    <section class="summary-strip" aria-label="Архив в цифрах" id="summary"></section>
+    <div class="toolbar"><label class="search-wrap"><span aria-hidden="true">⌕</span><input type="search" id="search" placeholder="Найти показатель…" aria-label="Найти показатель"><kbd>/</kbd></label><div class="filters"><label class="select-wrap"><select id="period" aria-label="Период"><option value="all">За всё время</option><option value="2026">2026 год</option><option value="2025">2025 год</option><option value="2024">2024 год</option></select><span aria-hidden="true">⌄</span></label><label class="select-wrap"><select id="status-filter" aria-label="Фильтр результатов"><option value="all">Все результаты</option><option value="outside">Вне референса</option><option value="inside">В референсе</option></select><span aria-hidden="true">⌄</span></label></div></div>
+    <div class="section-heading"><div><span class="section-number" aria-hidden="true">01</span><h2 id="detail-heading">Динамика показателя</h2></div><span class="muted" id="detail-hint">Выберите любую карточку ниже</span></div>
+    <section id="detail" class="detail-panel" aria-label="Подробная динамика"></section>
+    <div class="section-heading cards-heading"><div><span class="section-number" aria-hidden="true">02</span><h2 id="grid-heading">Ключевые показатели</h2><span class="count-badge" id="visible-count"></span></div><div class="view-switch" role="group" aria-label="Вид показателей"><button id="cards-view" class="active" aria-pressed="true">Карточки</button><button id="table-view" aria-pressed="false">Таблица</button></div></div>
+    <section id="metric-grid" class="metric-grid" aria-label="Показатели"></section>
+    <div id="metric-table" class="metric-table-wrap" hidden></div>
+    <div id="empty-state" class="empty-state" hidden><h3>Ничего не найдено</h3><p>Попробуйте другое название или сбросьте фильтры.</p><button class="button" id="reset-filters">Сбросить фильтры</button></div>
+    <button class="button all-button" id="all-metrics">Показать все показатели</button>
+    <footer class="page-footer"><p><span class="reference-key" aria-hidden="true"></span> Полоса — референс бланка. <span class="red-key" aria-hidden="true"></span> Красный — выход за его границы.</p><p>Нормы могут различаться между лабораториями и датами. Пропуск означает, что результата нет.</p></footer>
+   </main>
+  </div>
+ </div>
+ <script type="module" src="./app.mjs"></script>
+</body>
+</html>

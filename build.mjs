@@ -1,0 +1,18 @@
+import {readFile,writeFile} from 'node:fs/promises';
+import {resolve,dirname,join} from 'node:path';
+import {randomBytes,createHash} from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+import {parseMarkdown} from './model.mjs';
+import {seal,unseal} from './crypto.mjs';
+const root=dirname(fileURLToPath(import.meta.url));
+const args=process.argv.slice(2),source=args[args.indexOf('--source')+1];
+if(!args.includes('--source')||!source)throw new Error('Usage: npm run build -- --source /absolute/path/analyses.md');
+const password=process.env.MYHEALTH_PASSWORD||randomBytes(24).toString('base64url');
+if(password.length<16)throw new Error('Use at least 16 characters for the archive password.');
+const markdown=await readFile(resolve(source),'utf8'),model=parseMarkdown(markdown);
+if(!model.metrics.length)throw new Error('No observations found.');
+const vault=await seal(model,password);
+if((await unseal(vault,password)).markdown!==markdown)throw new Error('Lossless source verification failed.');
+await writeFile(join(root,'vault.json'),JSON.stringify(vault));
+if(JSON.stringify(vault).includes(markdown.slice(0,80)))throw new Error('Plaintext leaked.');
+console.log(JSON.stringify({status:'built',metrics:model.metrics.length,observations:model.metrics.reduce((n,m)=>n+m.observations.length,0),dates:model.dates.length,source_sha256:createHash('sha256').update(markdown).digest('hex'),password:process.env.MYHEALTH_PASSWORD?'unchanged':password}));

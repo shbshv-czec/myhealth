@@ -1,0 +1,16 @@
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {resolve,dirname,join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'.'),dir=root;
+let html=await readFile(join(dir,'index.html'),'utf8');
+const css=await readFile(join(dir,'app.css'),'utf8');
+const model=(await readFile(join(dir,'model.mjs'),'utf8')).replaceAll('export ','');
+const cipher=(await readFile(join(dir,'crypto.mjs'),'utf8')).replaceAll('export ','');
+const vault=await readFile(join(dir,'vault.json'),'utf8');
+let app=(await readFile(join(dir,'app.mjs'),'utf8')).replace(/^import .*;\n/gm,'');
+app=app.replace("const response=await fetch('./vault.json',{cache:'no-store'});if(!response.ok)throw new Error('load');vault=await response.json();",'vault=EMBEDDED_VAULT;');
+html=html.replace("script-src 'self'","script-src 'unsafe-inline'").replace(' <link rel="stylesheet" href="./app.css">',`<style>${css}</style>`).replace(' <link rel="icon" href="./favicon.svg" type="image/svg+xml">','');
+html=html.replace('<script type="module" src="./app.mjs"></script>',`<script type="module">const EMBEDDED_VAULT=${vault};\n${model}\n${cipher}\n${app}</script>`);
+const destination=process.argv[2]||join(root,'..','myhealth-preview.html');
+await writeFile(destination,html);
+console.log(destination);
