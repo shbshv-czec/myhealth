@@ -17,6 +17,7 @@ export function bounds(ref) {
 }
 const isNegative=s=> /^(отриц|не (обн|выяв)|не обн|отсутств)/i.test(s.trim());
 export function classify(raw, ref) {
+  if(/^\s*—|не определяет|не определял|не исследовал|не выполнял/i.test(raw)) return 'unknown';
   const n=numeric(raw), b=bounds(ref);
   if(!n&&b&&isNegative(raw)&&(b.low===null||b.low<=0))return 'inside';
   if(n&&b) {

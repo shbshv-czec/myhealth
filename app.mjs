@@ -13,7 +13,7 @@ const statusName=s=>s==='outside'?'Вне референса':s==='inside'?'В �
 const last=m=>m.observations.at(-1);
 const filteredObs=m=>m.observations.filter(o=>period==='all'||o.iso.startsWith(period));
 const filteredLast=m=>filteredObs(m).at(-1);
-function referenceText(o){return o.reference||'В бланке не указан';}
+function referenceText(o){return o.reference?o.reference.replace(/\s*(мкг\/л|нг\/мл|г\/дл|мкМЕ\/мл)\s*$/,''):'В бланке не указан';}
 function titleFor(m){return m.name.startsWith('Посев мочи на микрофлору и дрожжеподобные')?'Посев мочи на микрофлору':m.name;}
 
 function chart(m,small=false) {

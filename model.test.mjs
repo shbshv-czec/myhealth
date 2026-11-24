@@ -19,6 +19,7 @@ test('reference bounds include strict inequalities and ambiguous ranges',()=>{
  assert.equal(classify('отрицательно','отрицательно'),'inside');
  assert.equal(classify('в умеренном количестве','отсутствуют'),'outside');
  assert.equal(classify('не обнаружены','< 5'),'inside');
+ assert.equal(classify('— (в скрине отдельно не определяется)','не обнаружено'),'unknown');
  assert.equal(bounds('Фолликул. фаза: 1–10 / Лютеиновая: 2–5'),null);
 });
 test('absolute and percentage results with identical names retain distinct laboratory norms',()=>{
